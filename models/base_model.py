@@ -8,25 +8,18 @@ class BaseModel:
     """A base class for all other classes in the models directory."""
 
     def __init__(self, *args, **kwargs):
-        """
-        Initializes a new instance of the BaseModel.
-
-        Attributes:
-        - id: str - a unique identifier (UUID) converted to a string.
-        - created_at: set to the current datetime when the instance is created
-        - updated_at: set to current datetime when the instance is created
-        """
-
+        """ Instatialisation of the init method """
         if kwargs:
             for key, value in kwargs.items():
-                if key in ["created_at" "updated_at"]:
-                    value = datetime.fromisoformat(value)
-
-                # Set the attribute on the object.
-                else:
-                    setattr(self, key, value)
-
-        # Otherwise, create new `id` and `created_at` attributes.
+                if key != '__class__':
+                    if key == 'created_at' or key == 'updated_at':
+                        setattr(
+                            self,
+                            key,
+                            datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"),
+                        )
+                    else:
+                        setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
@@ -41,10 +34,9 @@ class BaseModel:
         self.updated_at = datetime.now()
 
     def to_dict(self):
-        """returns a dictionary containing all keys/values of __dict__"""
-
-        my_dict = self.__dict__.copy()
-        my_dict["__class__"] = type(self).__name__
-        my_dict["created_at"] = my_dict["created_at"].isoformat()
-        my_dict["updated_at"] = my_dict["updated_at"].isoformat()
-        return my_dict
+        """ returns a dictionary containing all keys/values of the instance"""
+        obj_dict = self.__dict__.copy()
+        obj_dict['created_at'] = obj_dict['created_at'].isoformat()
+        obj_dict['updated_at'] = obj_dict['updated_at'].isoformat()
+        obj_dict['__class__'] = self.__class__.__name__
+        return obj_dict
