@@ -1,9 +1,13 @@
 #!/usr/bin/python3
+"""This is the console for AirBnB"""
 
 import cmd
 
 
 class HBNBCommand(cmd.Cmd):
+
+    """Class for the command interpreter."""
+
     prompt = '(hbnb)'
 
     def do_quit(self, arg):
@@ -22,6 +26,7 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Do nothing when an empty line is entered"""
         pass
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
