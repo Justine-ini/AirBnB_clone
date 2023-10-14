@@ -8,7 +8,7 @@ class HBNBCommand(cmd.Cmd):
 
     """Class for the command interpreter."""
 
-    prompt = "(hbnb)"
+    prompt = "(hbnb) "
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
