@@ -36,7 +36,6 @@ class FileStorage:
         with open(FileStorage.__file_path, "w", encoding="utf-8") as file:
             json.dumps(serialized_object, file)
 
-
     def reload(self):
         """deserializes the JSON file to __objects"""
         dict_to_obj = {}
