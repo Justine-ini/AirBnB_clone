@@ -100,10 +100,11 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             else:
-                all_instances = [str(obj) for obj in obj_dict.values()]
+                all_instances = class_name.obj_dict
         else:
-            all_instances = [str(obj) for obj in obj_dict.values()]
-        print(all_instances)
+            all_instances = HBNBCommand.__classes.obj_dict.values()
+        for instance in all_instances:
+            print(str(instance))
 
     def do_update(self, arg):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
