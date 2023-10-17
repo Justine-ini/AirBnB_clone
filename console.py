@@ -18,14 +18,14 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
     __classes = {
-        "BaseModel",
-        "User",
-        "State",
-        "City",
-        "Place",
-        "Amenity",
-        "Review"
-    }
+            "BaseModel",
+            "User",
+            "State",
+            "City",
+            "Place",
+            "Amenity",
+            "Review"
+            }
 
     def do_create(self, arg):
         """Usage: create <class>
@@ -88,23 +88,20 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class name missing **")
 
-    def do_all(self, arg):
-        """Usage: all or all <class> or <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
-        obj_dict = storage.all()
-        all_instances = []
-        if arg:
-            class_name = arg.split()[0]
-            if class_name not in HBNBCommand.__classes:
+    def do_all(self, line):
+        """Prints all string representation of all instances.
+        """
+        if line != "":
+            words = line.split(' ')
+            if words[0] not in storage.classes():
                 print("** class doesn't exist **")
-                return
             else:
-                all_instances = class_name.obj_dict
+                nl = [str(obj) for key, obj in storage.all().items()
+                      if type(obj).__name__ == words[0]]
+                print(nl)
         else:
-            all_instances = HBNBCommand.__classes.obj_dict.values()
-        for instance in all_instances:
-            print(str(instance))
+            new_list = [str(obj) for key, obj in storage.all().items()]
+            print(new_list)
 
     def do_update(self, arg):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
