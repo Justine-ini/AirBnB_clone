@@ -27,6 +27,29 @@ class HBNBCommand(cmd.Cmd):
             "Review"
             }
 
+    def update_dict(self, classname, uid, s_dict):
+        """Helper method for update() with a dictionary."""
+        s = s_dict.replace("'", '"')
+        d = json.loads(s)
+        if not classname:
+            print("** class name missing **")
+        elif classname not in storage.classes():
+            print("** class doesn't exist **")
+        elif uid is None:
+            print("** instance id missing **")
+        else:
+            key = "{}.{}".format(classname, uid)
+            if key not in storage.all():
+                print("** no instance found **")
+            else:
+                attributes = storage.attributes()[classname]
+                for attribute, value in d.items():
+                    if attribute in attributes:
+                        value = attributes[attribute](value)
+                    setattr(storage.all()[key], attribute, value)
+                storage.all()[key].save()
+
+
     def do_create(self, arg):
         """Usage: create <class>
         Create a new class instance and print its id.
@@ -87,21 +110,22 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
-
     def do_all(self, line):
-        """Prints all string representation of all instances.
+        """Prints all string representations of all instances.
         """
         if line != "":
-            words = line.split(' ')
-            if words[0] not in storage.classes():
+            words = line.split()
+            class_name = words[0]
+            if class_name not in storage.classes():
                 print("** class doesn't exist **")
             else:
                 nl = [str(obj) for key, obj in storage.all().items()
-                      if type(obj).__name__ == words[0]]
+                    if key.split('.')[0] == class_name]
                 print(nl)
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
             print(new_list)
+
 
     def do_update(self, arg):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
