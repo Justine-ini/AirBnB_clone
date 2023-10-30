@@ -49,6 +49,16 @@ class HBNBCommand(cmd.Cmd):
                     setattr(storage.all()[key], attribute, value)
                 storage.all()[key].save()
 
+    def precmd(self, arg):
+        if any(char in arg for char in ['.', '(', ')']):
+            arg = arg.replace('.', ' ').replace('(', ' ').replace(')', ' ')
+            words = arg.split()
+            if len(words) >= 2:
+                words[0], words[1] = words[1], words[0]
+            new_arg = ' '.join(words)
+        else:
+            new_arg = arg
+        return super().precmd(new_arg)
 
     def do_create(self, arg):
         """Usage: create <class>
@@ -110,22 +120,21 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
+
     def do_all(self, line):
-        """Prints all string representations of all instances.
+        """Prints all string representation of all instances.
         """
         if line != "":
-            words = line.split()
-            class_name = words[0]
-            if class_name not in storage.classes():
+            words = line.split(' ')
+            if words[0] not in storage.classes():
                 print("** class doesn't exist **")
             else:
                 nl = [str(obj) for key, obj in storage.all().items()
-                    if key.split('.')[0] == class_name]
+                      if type(obj).__name__ == words[0]]
                 print(nl)
         else:
             new_list = [str(obj) for key, obj in storage.all().items()]
             print(new_list)
-
 
     def do_update(self, arg):
         """Usage: update <class> <id> <attribute_name> <attribute_value> or
